@@ -1,7 +1,5 @@
 from django.db import models
 
-#database models for albums and photos 
-
 class Album(models.Model):
     title = models.CharField(max_length=200)
     event_date = models.DateField()
