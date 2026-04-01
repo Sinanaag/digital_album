@@ -117,3 +117,9 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/6.0/howto/static-files/
 
 STATIC_URL = 'static/'
+
+# Where uploaded files (photos) are saved on your computer
+MEDIA_ROOT = BASE_DIR / 'media'
+
+# The URL prefix used to access uploaded files in the browser
+MEDIA_URL = '/media/'

@@ -1,3 +1,6 @@
 from django.shortcuts import render
+from .models import Album
 
-# Create your views here.
+def home(request):
+    albums = Album.objects.all()
+    return render(request, 'home.html', {'albums': albums})
