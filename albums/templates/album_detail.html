@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ album.title }} — Digital Album</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #0f0f13;
+            color: #e0e0e0;
+            min-height: 100vh;
+        }
+
+        /* ── NAVBAR ── */
+        nav {
+            background: rgba(255,255,255,0.03);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(255,255,255,0.07);
+            padding: 18px 40px;
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .back-btn {
+            color: #6b7280;
+            text-decoration: none;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: color 0.2s;
+        }
+
+        .back-btn:hover { color: #a78bfa; }
+
+        .nav-divider {
+            color: #2d2d3a;
+            font-size: 1.2rem;
+        }
+
+        .nav-title {
+            font-size: 1rem;
+            font-weight: 600;
+            color: #d1d5db;
+        }
+
+        /* ── HEADER ── */
+        .album-header {
+            text-align: center;
+            padding: 60px 20px 40px;
+        }
+
+        .album-header h1 {
+            font-size: 2.4rem;
+            font-weight: 700;
+            letter-spacing: -1px;
+            background: linear-gradient(135deg, #ffffff 0%, #a78bfa 60%, #60a5fa 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 10px;
+        }
+
+        .album-meta {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .meta-chip {
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 20px;
+            padding: 5px 14px;
+            font-size: 0.82rem;
+            color: #9ca3af;
+        }
+
+        /* ── PHOTO GRID ── */
+        .photo-grid {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 10px 30px 80px;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 20px;
+        }
+
+        .photo-card {
+            background: rgba(255,255,255,0.04);
+            border: 1px solid rgba(255,255,255,0.07);
+            border-radius: 16px;
+            overflow: hidden;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            cursor: pointer;
+        }
+
+        .photo-card:hover {
+            transform: translateY(-5px) scale(1.01);
+            border-color: rgba(167,139,250,0.3);
+            box-shadow: 0 20px 50px rgba(167,139,250,0.12);
+        }
+
+        .photo-card img {
+            width: 100%;
+            height: 220px;
+            object-fit: cover;
+            display: block;
+            transition: transform 0.4s ease;
+        }
+
+        .photo-card:hover img {
+            transform: scale(1.05);
+        }
+
+        .photo-card-footer {
+            padding: 12px 16px;
+            font-size: 0.78rem;
+            color: #6b7280;
+        }
+
+        /* ── EMPTY STATE ── */
+        .empty-state {
+            grid-column: 1/-1;
+            text-align: center;
+            padding: 80px 20px;
+            color: #4b5563;
+        }
+
+        .empty-icon { font-size: 3.5rem; margin-bottom: 16px; opacity: 0.5; }
+
+        .empty-state a { color: #a78bfa; text-decoration: none; }
+
+        /* ── LIGHTBOX ── */
+        .lightbox {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.92);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .lightbox.active { display: flex; }
+
+        .lightbox img {
+            max-width: 90vw;
+            max-height: 88vh;
+            border-radius: 12px;
+            object-fit: contain;
+        }
+
+        .lightbox-close {
+            position: absolute;
+            top: 20px; right: 28px;
+            font-size: 2rem;
+            color: #9ca3af;
+            cursor: pointer;
+            background: none;
+            border: none;
+            line-height: 1;
+            transition: color 0.2s;
+        }
+
+        .lightbox-close:hover { color: #fff; }
+
+        /* ── ANIMATIONS ── */
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(16px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+
+        .photo-card { animation: fadeInUp 0.4s ease both; }
+        .photo-card:nth-child(1) { animation-delay: 0.05s; }
+        .photo-card:nth-child(2) { animation-delay: 0.10s; }
+        .photo-card:nth-child(3) { animation-delay: 0.15s; }
+        .photo-card:nth-child(4) { animation-delay: 0.20s; }
+        .photo-card:nth-child(5) { animation-delay: 0.25s; }
+        .photo-card:nth-child(6) { animation-delay: 0.30s; }
+    </style>
+</head>
+<body>
+
+<nav>
+    <a href="{% url 'home' %}" class="back-btn">← Albums</a>
+    <span class="nav-divider">/</span>
+    <span class="nav-title">{{ album.title }}</span>
+</nav>
+
+<div class="album-header">
+    <h1>{{ album.title }}</h1>
+    <div class="album-meta">
+        <span class="meta-chip">📅 {{ album.event_date }}</span>
+        {% if album.description %}
+        <span class="meta-chip">{{ album.description }}</span>
+        {% endif %}
+        <span class="meta-chip">🖼 {{ photos|length }} photo{{ photos|length|pluralize }}</span>
+    </div>
+</div>
+
+<div class="photo-grid">
+    {% if photos %}
+        {% for photo in photos %}
+            <div class="photo-card" onclick="openLightbox('{{ photo.image.url }}')">
+                <img src="{{ photo.image.url }}" alt="Photo {{ forloop.counter }}">
+                <div class="photo-card-footer">📅 {{ photo.uploaded_at|date:"M d, Y" }}</div>
+            </div>
+        {% endfor %}
+    {% else %}
+        <div class="empty-state">
+            <div class="empty-icon">🖼</div>
+            <p>No photos in this album yet.</p>
+            <p>Go to <a href="/admin/">Admin Panel</a> to add photos!</p>
+        </div>
+    {% endif %}
+</div>
+
+<!-- Lightbox (click photo to see full size) -->
+<div class="lightbox" id="lightbox" onclick="closeLightbox()">
+    <button class="lightbox-close" onclick="closeLightbox()">✕</button>
+    <img id="lightbox-img" src="" alt="Full size photo">
+</div>
+
+<script>
+    function openLightbox(url) {
+        document.getElementById('lightbox-img').src = url;
+        document.getElementById('lightbox').classList.add('active');
+    }
+    function closeLightbox() {
+        document.getElementById('lightbox').classList.remove('active');
+    }
+    // Close with Escape key
+    document.addEventListener('keydown', e => {
+        if (e.key === 'Escape') closeLightbox();
+    });
+</script>
+
+</body>
+</html>

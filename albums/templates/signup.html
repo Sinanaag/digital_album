@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign Up - Digital Album</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+        .form-box {
+            background: white;
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            width: 380px;
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 25px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            color: #555;
+            font-size: 0.9rem;
+        }
+        input[type="text"], input[type="password"] {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            margin-bottom: 5px;
+            font-size: 1rem;
+            box-sizing: border-box;
+        }
+        .helptext {
+            font-size: 0.75rem;
+            color: #aaa;
+            margin-bottom: 12px;
+            display: block;
+        }
+        .errorlist {
+            color: red;
+            font-size: 0.8rem;
+            padding: 0;
+            margin: 0 0 10px 0;
+            list-style: none;
+        }
+        button {
+            width: 100%;
+            padding: 12px;
+            background-color: #2196F3;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 1rem;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+        button:hover {
+            background-color: #1976D2;
+        }
+        .link {
+            text-align: center;
+            margin-top: 15px;
+            font-size: 0.9rem;
+            color: #888;
+        }
+        .link a {
+            color: #2196F3;
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="form-box">
+        <h1>📝 Create Account</h1>
+
+        <form method="POST">
+            {% csrf_token %}
+
+            {% for field in form %}
+                <label>{{ field.label }}</label>
+                {{ field }}
+                <!-- Show help text (e.g. password rules) -->
+                {% if field.help_text %}
+                    <span class="helptext">{{ field.help_text }}</span>
+                {% endif %}
+                <!-- Show validation errors for each field -->
+                {% if field.errors %}
+                    <ul class="errorlist">
+                        {% for error in field.errors %}
+                            <li>⚠️ {{ error }}</li>
+                        {% endfor %}
+                    </ul>
+                {% endif %}
+            {% endfor %}
+
+            <button type="submit">Create Account</button>
+        </form>
+
+        <div class="link">
+            Already have an account? <a href="{% url 'login' %}">Login</a>
+        </div>
+    </div>
+</body>
+</html>

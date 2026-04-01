@@ -21,8 +21,10 @@ from django.conf.urls.static import static
 from albums import views  # Import our views
 
 urlpatterns = [
-    path('admin/', admin.site.urls),     # /admin/ → Django admin panel
-    path('', views.home, name='home'),   # / → our home page
+    path('admin/', admin.site.urls),
+    path('', views.home, name='home'),
+    path('album/<int:album_id>/', views.album_detail, name='album_detail'),
+    path('album/<int:album_id>/passkey/', views.enter_passkey, name='enter_passkey'),
 ]
 
 # This makes Django serve uploaded images during development

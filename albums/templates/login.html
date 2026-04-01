@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Digital Album</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .form-box {
+            background: white;
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            width: 350px;
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 25px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            color: #555;
+            font-size: 0.9rem;
+        }
+        input[type="text"], input[type="password"] {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            margin-bottom: 15px;
+            font-size: 1rem;
+            box-sizing: border-box;
+        }
+        button {
+            width: 100%;
+            padding: 12px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 1rem;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        .errors {
+            color: red;
+            font-size: 0.85rem;
+            margin-bottom: 10px;
+        }
+        .link {
+            text-align: center;
+            margin-top: 15px;
+            font-size: 0.9rem;
+            color: #888;
+        }
+        .link a {
+            color: #4CAF50;
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="form-box">
+        <h1>🔐 Login</h1>
+
+        <!-- Show errors if login fails -->
+        {% if form.errors %}
+            <div class="errors">
+                ❌ Invalid username or password. Try again.
+            </div>
+        {% endif %}
+
+        <!--
+            method="POST"   → Send data securely to the server
+            {% csrf_token %} → Security token Django requires for all forms
+        -->
+        <form method="POST">
+            {% csrf_token %}
+
+            <!-- Django renders each field for us -->
+            {% for field in form %}
+                <label>{{ field.label }}</label>
+                {{ field }}
+            {% endfor %}
+
+            <button type="submit">Login</button>
+        </form>
+
+        <div class="link">
+            Don't have an account? <a href="{% url 'signup' %}">Sign up</a>
+        </div>
+    </div>
+</body>
+</html>

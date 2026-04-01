@@ -3,67 +3,937 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Digital Album</title>
+    <title>VowStudio — Photography & Film</title>
+    <meta name="description" content="VowStudio — Professional photography and cinematic videography. We tell your story through light.">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Playfair+Display:ital,wght@0,700;1,400&display=swap" rel="stylesheet">
     <style>
+        /* ── RESET & BASE ── */
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+        :root {
+            --purple: #a78bfa;
+            --blue:   #60a5fa;
+            --bg:     #0a0a0e;
+            --bg2:    #0f0f15;
+            --border: rgba(255,255,255,0.07);
+            --text:   #e4e4e7;
+            --muted:  #71717a;
+        }
+
+        html { scroll-behavior: smooth; }
+
         body {
-            font-family: Arial, sans-serif;
-            background-color: #f4f4f4;
-            margin: 0;
-            padding: 20px;
+            font-family: 'Inter', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            overflow-x: hidden;
         }
-        h1 {
-            text-align: center;
-            color: #333;
-        }
-        .album-grid {
+
+        /* ── NAVBAR ── */
+        .navbar {
+            position: fixed;
+            top: 0; left: 0; right: 0;
+            z-index: 1000;
             display: flex;
-            flex-wrap: wrap;
-            gap: 20px;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 60px;
+            height: 70px;
+            background: rgba(10,10,14,0.7);
+            backdrop-filter: blur(24px);
+            border-bottom: 1px solid var(--border);
+            transition: all 0.3s ease;
+        }
+
+        .logo {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.5rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #fff 0%, var(--purple) 60%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            letter-spacing: -0.5px;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 36px;
+            list-style: none;
+        }
+
+        .nav-links a {
+            color: var(--muted);
+            text-decoration: none;
+            font-size: 0.88rem;
+            font-weight: 500;
+            letter-spacing: 0.3px;
+            transition: color 0.2s;
+            position: relative;
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -4px; left: 0;
+            width: 0; height: 1.5px;
+            background: linear-gradient(90deg, var(--purple), var(--blue));
+            transition: width 0.3s ease;
+        }
+
+        .nav-links a:hover { color: #fff; }
+        .nav-links a:hover::after { width: 100%; }
+
+        .nav-cta {
+            background: linear-gradient(135deg, var(--purple), var(--blue));
+            color: white !important;
+            padding: 8px 20px;
+            border-radius: 8px;
+            font-weight: 600 !important;
+            transition: opacity 0.2s, transform 0.2s !important;
+        }
+
+        .nav-cta:hover { opacity: 0.85; transform: translateY(-1px); }
+        .nav-cta::after { display: none !important; }
+
+        /* ── HERO ── */
+        #home {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
             justify-content: center;
-            margin-top: 30px;
-        }
-        .album-card {
-            background: white;
-            border-radius: 10px;
-            padding: 20px;
-            width: 250px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
             text-align: center;
+            padding: 120px 30px 80px;
+            position: relative;
+            overflow: hidden;
         }
-        .album-card h2 {
-            color: #444;
-            font-size: 1.2rem;
+
+        #home::before {
+            content: '';
+            position: absolute;
+            top: -200px; left: 50%;
+            transform: translateX(-50%);
+            width: 800px; height: 800px;
+            background: radial-gradient(circle, rgba(167,139,250,0.1) 0%, transparent 65%);
+            pointer-events: none;
         }
-        .album-card p {
-            color: #888;
-            font-size: 0.9rem;
+
+        #home::after {
+            content: '';
+            position: absolute;
+            bottom: 0; left: 0; right: 0;
+            height: 200px;
+            background: linear-gradient(transparent, var(--bg));
+            pointer-events: none;
         }
-        .no-albums {
-            text-align: center;
-            color: #888;
+
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(167,139,250,0.1);
+            border: 1px solid rgba(167,139,250,0.25);
+            border-radius: 20px;
+            padding: 6px 16px;
+            font-size: 0.78rem;
+            font-weight: 500;
+            color: var(--purple);
+            letter-spacing: 0.5px;
+            margin-bottom: 28px;
+            animation: fadeInDown 0.6s ease both;
+        }
+
+        .hero-title {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(3rem, 8vw, 5.5rem);
+            line-height: 1.1;
+            letter-spacing: -2px;
+            color: #fff;
+            margin-bottom: 24px;
+            animation: fadeInUp 0.7s 0.1s ease both;
+        }
+
+        .hero-title em {
+            font-style: italic;
+            background: linear-gradient(135deg, var(--purple), var(--blue));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero-sub {
+            font-size: 1.05rem;
+            color: var(--muted);
+            max-width: 500px;
+            line-height: 1.7;
+            margin-bottom: 40px;
+            animation: fadeInUp 0.7s 0.2s ease both;
+        }
+
+        .hero-buttons {
+            display: flex;
+            gap: 14px;
+            flex-wrap: wrap;
+            justify-content: center;
+            animation: fadeInUp 0.7s 0.3s ease both;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--purple), var(--blue));
+            color: white;
+            padding: 14px 32px;
+            border-radius: 12px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.92rem;
+            transition: all 0.25s ease;
+        }
+
+        .btn-primary:hover {
+            opacity: 0.88;
+            transform: translateY(-2px);
+            box-shadow: 0 12px 40px rgba(167,139,250,0.35);
+        }
+
+        .btn-ghost {
+            background: transparent;
+            color: var(--text);
+            padding: 14px 32px;
+            border-radius: 12px;
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 0.92rem;
+            border: 1px solid var(--border);
+            transition: all 0.25s ease;
+        }
+
+        .btn-ghost:hover {
+            border-color: rgba(167,139,250,0.4);
+            color: #fff;
+            background: rgba(167,139,250,0.06);
+        }
+
+        .hero-stats {
+            display: flex;
+            gap: 48px;
+            margin-top: 70px;
+            flex-wrap: wrap;
+            justify-content: center;
+            animation: fadeInUp 0.7s 0.4s ease both;
+            position: relative;
+            z-index: 1;
+        }
+
+        .stat h3 {
+            font-size: 2.2rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #fff, var(--purple));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .stat p {
+            font-size: 0.82rem;
+            color: var(--muted);
+            margin-top: 4px;
+        }
+
+        /* ── SECTION COMMON ── */
+        section {
+            padding: 100px 60px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .section-label {
+            font-size: 0.75rem;
+            font-weight: 600;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            color: var(--purple);
+            margin-bottom: 14px;
+        }
+
+        .section-title {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(2rem, 4vw, 2.8rem);
+            font-weight: 700;
+            color: #fff;
+            letter-spacing: -1px;
+            line-height: 1.2;
+            margin-bottom: 16px;
+        }
+
+        .section-sub {
+            font-size: 0.95rem;
+            color: var(--muted);
+            max-width: 500px;
+            line-height: 1.7;
+        }
+
+        .divider {
+            height: 1px;
+            background: var(--border);
+            margin: 0;
+        }
+
+        /* ── ABOUT ── */
+        .about-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 60px;
+            align-items: center;
             margin-top: 50px;
+        }
+
+        .about-features {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-top: 36px;
+        }
+
+        .feature-card {
+            background: rgba(255,255,255,0.03);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 22px;
+            transition: all 0.3s ease;
+        }
+
+        .feature-card:hover {
+            border-color: rgba(167,139,250,0.3);
+            background: rgba(167,139,250,0.05);
+            transform: translateY(-3px);
+        }
+
+        .feature-icon { font-size: 1.6rem; margin-bottom: 10px; }
+
+        .feature-card h4 {
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: #e4e4e7;
+            margin-bottom: 6px;
+        }
+
+        .feature-card p {
+            font-size: 0.8rem;
+            color: var(--muted);
+            line-height: 1.5;
+        }
+
+        .about-visual {
+            background: rgba(255,255,255,0.03);
+            border: 1px solid var(--border);
+            border-radius: 24px;
+            aspect-ratio: 3/4;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 6rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .about-visual::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, rgba(167,139,250,0.08), rgba(96,165,250,0.08));
+        }
+
+        /* ── WORKS (ALBUMS) ── */
+        #works { max-width: 1200px; }
+
+        .works-header {
+            display: flex;
+            align-items: flex-end;
+            justify-content: space-between;
+            margin-bottom: 40px;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .album-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 24px;
+        }
+
+        .album-card {
+            background: rgba(255,255,255,0.03);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            padding: 28px;
+            text-decoration: none;
+            display: block;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+            animation: fadeInUp 0.5s ease both;
+        }
+
+        .album-card::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, rgba(167,139,250,0.07), rgba(96,165,250,0.07));
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .album-card:hover {
+            transform: translateY(-7px);
+            border-color: rgba(167,139,250,0.4);
+            box-shadow: 0 24px 70px rgba(167,139,250,0.14);
+        }
+
+        .album-card:hover::before { opacity: 1; }
+
+        .album-card:nth-child(1) { animation-delay: 0.05s; }
+        .album-card:nth-child(2) { animation-delay: 0.10s; }
+        .album-card:nth-child(3) { animation-delay: 0.15s; }
+        .album-card:nth-child(4) { animation-delay: 0.20s; }
+
+        .card-icon {
+            width: 54px; height: 54px;
+            border-radius: 14px;
+            background: linear-gradient(135deg, rgba(167,139,250,0.15), rgba(96,165,250,0.15));
+            border: 1px solid rgba(167,139,250,0.25);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.6rem;
+            margin-bottom: 18px;
+        }
+
+        .card-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #f4f4f5;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .lock-badge {
+            background: linear-gradient(135deg, var(--purple), var(--blue));
+            border-radius: 6px;
+            padding: 2px 8px;
+            font-size: 0.62rem;
+            font-weight: 700;
+            color: white;
+            letter-spacing: 0.5px;
+        }
+
+        .card-date { font-size: 0.8rem; color: #52525b; margin-bottom: 8px; }
+        .card-desc { font-size: 0.85rem; color: var(--muted); line-height: 1.5; }
+
+        .card-arrow {
+            position: absolute;
+            bottom: 24px; right: 24px;
+            color: #3f3f46;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+        }
+
+        .album-card:hover .card-arrow {
+            color: var(--purple);
+            transform: translateX(4px);
+        }
+
+        .empty-state {
+            grid-column: 1/-1;
+            text-align: center;
+            padding: 80px;
+            color: var(--muted);
+        }
+
+        /* ── LOCATION ── */
+        .location-wrapper {
+            background: rgba(255,255,255,0.03);
+            border: 1px solid var(--border);
+            border-radius: 24px;
+            overflow: hidden;
+            margin-top: 50px;
+            display: grid;
+            grid-template-columns: 1fr 1.4fr;
+        }
+
+        .location-info {
+            padding: 50px;
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+        }
+
+        .location-detail {
+            display: flex;
+            gap: 16px;
+            align-items: flex-start;
+        }
+
+        .location-detail-icon {
+            width: 42px; height: 42px;
+            border-radius: 12px;
+            background: rgba(167,139,250,0.1);
+            border: 1px solid rgba(167,139,250,0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.1rem;
+            flex-shrink: 0;
+        }
+
+        .location-detail h4 {
+            font-size: 0.82rem;
+            font-weight: 600;
+            color: var(--muted);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 4px;
+        }
+
+        .location-detail p {
+            font-size: 0.92rem;
+            color: var(--text);
+            line-height: 1.5;
+        }
+
+        .map-placeholder {
+            background: rgba(167,139,250,0.04);
+            border-left: 1px solid var(--border);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 40px;
+            font-size: 5rem;
+            gap: 16px;
+            min-height: 340px;
+        }
+
+        .map-placeholder p {
+            font-size: 0.88rem;
+            color: var(--muted);
+        }
+
+        /* ── CONTACT ── */
+        .contact-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 60px;
+            margin-top: 50px;
+            align-items: start;
+        }
+
+        .contact-card {
+            background: rgba(255,255,255,0.03);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            padding: 32px;
+            display: flex;
+            gap: 16px;
+            align-items: flex-start;
+            transition: all 0.3s ease;
+        }
+
+        .contact-card:hover {
+            border-color: rgba(167,139,250,0.3);
+            transform: translateY(-3px);
+        }
+
+        .contact-icon {
+            width: 46px; height: 46px;
+            border-radius: 12px;
+            background: linear-gradient(135deg, rgba(167,139,250,0.15), rgba(96,165,250,0.15));
+            border: 1px solid rgba(167,139,250,0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            flex-shrink: 0;
+        }
+
+        .contact-card h4 {
+            font-size: 0.82rem;
+            font-weight: 600;
+            color: var(--muted);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 6px;
+        }
+
+        .contact-card p, .contact-card a {
+            font-size: 0.95rem;
+            color: var(--text);
+            text-decoration: none;
+            line-height: 1.5;
+        }
+
+        .contact-card a:hover { color: var(--purple); }
+
+        .contact-cards {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        /* ── CONTACT FORM ── */
+        .contact-form {
+            background: rgba(255,255,255,0.03);
+            border: 1px solid var(--border);
+            border-radius: 24px;
+            padding: 36px;
+        }
+
+        .contact-form h3 {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #fff;
+            margin-bottom: 24px;
+        }
+
+        .form-group {
+            margin-bottom: 16px;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 0.8rem;
+            font-weight: 500;
+            color: var(--muted);
+            margin-bottom: 6px;
+        }
+
+        .form-group input,
+        .form-group textarea {
+            width: 100%;
+            padding: 12px 16px;
+            background: rgba(255,255,255,0.04);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            font-size: 0.9rem;
+            font-family: 'Inter', sans-serif;
+            color: var(--text);
+            transition: all 0.2s ease;
+            outline: none;
+            resize: none;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus {
+            border-color: rgba(167,139,250,0.5);
+            background: rgba(167,139,250,0.05);
+            box-shadow: 0 0 0 3px rgba(167,139,250,0.08);
+        }
+
+        .form-group input::placeholder,
+        .form-group textarea::placeholder { color: #3f3f46; }
+
+        .submit-btn {
+            width: 100%;
+            padding: 13px;
+            background: linear-gradient(135deg, var(--purple), var(--blue));
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 0.92rem;
+            font-weight: 600;
+            font-family: 'Inter', sans-serif;
+            cursor: pointer;
+            transition: all 0.25s ease;
+            margin-top: 8px;
+        }
+
+        .submit-btn:hover {
+            opacity: 0.88;
+            transform: translateY(-1px);
+            box-shadow: 0 8px 30px rgba(167,139,250,0.3);
+        }
+
+        /* ── FOOTER ── */
+        footer {
+            border-top: 1px solid var(--border);
+            padding: 32px 60px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 16px;
+        }
+
+        footer .logo { font-size: 1.1rem; }
+
+        footer p {
+            font-size: 0.8rem;
+            color: var(--muted);
+        }
+
+        footer a {
+            color: var(--muted);
+            text-decoration: none;
+            font-size: 0.8rem;
+            transition: color 0.2s;
+        }
+
+        footer a:hover { color: var(--purple); }
+
+        /* ── ANIMATIONS ── */
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(24px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes fadeInDown {
+            from { opacity: 0; transform: translateY(-12px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+
+        /* ── RESPONSIVE ── */
+        @media (max-width: 768px) {
+            .navbar { padding: 0 24px; }
+            .nav-links { display: none; }
+            section { padding: 70px 24px; }
+            .about-grid, .contact-grid { grid-template-columns: 1fr; }
+            .location-wrapper { grid-template-columns: 1fr; }
+            .hero-stats { gap: 30px; }
+            footer { flex-direction: column; text-align: center; }
         }
     </style>
 </head>
 <body>
 
-    <h1>📷 My Digital Album</h1>
+<!-- ── NAVBAR ── -->
+<nav class="navbar">
+    <div class="logo">VowStudio</div>
+    <ul class="nav-links">
+        <li><a href="#home">Home</a></li>
+        <li><a href="#works">Works</a></li>
+        <li><a href="#location">Location</a></li>
+        <li><a href="#contact" class="nav-cta">Contact Us</a></li>
+    </ul>
+</nav>
+
+<!-- ── HERO ── -->
+<section id="home">
+    <div class="hero-badge">✦ Premium Photography & Film Studio</div>
+    <h1 class="hero-title">We Tell Your Story<br><em>Through Light.</em></h1>
+    <p class="hero-sub">VowStudio is a professional photography and cinematic videography studio dedicated to capturing your most precious moments with artistry and emotion.</p>
+    <div class="hero-buttons">
+        <a href="#works" class="btn-primary">📷 View Our Work</a>
+        <a href="#contact" class="btn-ghost">Get in Touch →</a>
+    </div>
+    <div class="hero-stats">
+        <div class="stat"><h3>500+</h3><p>Projects Completed</p></div>
+        <div class="stat"><h3>8+</h3><p>Years of Experience</p></div>
+        <div class="stat"><h3>98%</h3><p>Client Satisfaction</p></div>
+        <div class="stat"><h3>50+</h3><p>Awards Won</p></div>
+    </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ── ABOUT ── -->
+<section id="about" style="max-width:1200px;">
+    <div class="section-label">Who We Are</div>
+    <div class="about-grid">
+        <div>
+            <h2 class="section-title">A studio built on<br>passion & precision.</h2>
+            <p class="section-sub">At VowStudio, we believe every moment deserves to be told beautifully. From intimate weddings to grand corporate events, our team of skilled photographers and filmmakers bring creativity and technical excellence to every project.</p>
+            <div class="about-features">
+                <div class="feature-card">
+                    <div class="feature-icon">💍</div>
+                    <h4>Wedding Photography</h4>
+                    <p>Timeless captures of your most special day.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🎬</div>
+                    <h4>Cinematic Film</h4>
+                    <p>Professional videography that tells a story.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🏢</div>
+                    <h4>Corporate Events</h4>
+                    <p>Clean, professional event documentation.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">👤</div>
+                    <h4>Portraits</h4>
+                    <p>Personal branding and lifestyle shoots.</p>
+                </div>
+            </div>
+        </div>
+        <div class="about-visual">
+            🎞
+        </div>
+    </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ── WORKS / ALBUMS ── -->
+<section id="works" style="max-width:1200px;">
+    <div class="works-header">
+        <div>
+            <div class="section-label">Our Portfolio</div>
+            <h2 class="section-title">Explore Our Work</h2>
+        </div>
+        <p style="color:var(--muted); font-size:0.88rem; max-width:260px; text-align:right;">Browse through our curated albums. Some may require a passkey for private access.</p>
+    </div>
 
     <div class="album-grid">
         {% if albums %}
             {% for album in albums %}
-                <div class="album-card">
-                    <h2>{{ album.title }}</h2>
-                    <p>📅 {{ album.event_date }}</p>
-                    <p>{{ album.description }}</p>
-                </div>
+                <a class="album-card" href="{% url 'album_detail' album.id %}">
+                    <div class="card-icon">📷</div>
+                    <div class="card-title">
+                        {{ album.title }}
+                        {% if album.passkey %}<span class="lock-badge">🔒 PRIVATE</span>{% endif %}
+                    </div>
+                    <div class="card-date">📅 {{ album.event_date }}</div>
+                    <div class="card-desc">{{ album.description }}</div>
+                    <div class="card-arrow">→</div>
+                </a>
             {% endfor %}
         {% else %}
-            <div class="no-albums">
-                <p>No albums yet. Go to <a href="/admin/">Admin Panel</a> to add one!</p>
+            <div class="empty-state">
+                <p style="font-size:3rem; margin-bottom:12px;">📭</p>
+                <p>No albums yet. <a href="/admin/" style="color:var(--purple);">Add one in Admin →</a></p>
             </div>
         {% endif %}
     </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ── LOCATION ── -->
+<section id="location" style="max-width:1200px;">
+    <div class="section-label">Find Us</div>
+    <h2 class="section-title">Our Studio Location</h2>
+    <p class="section-sub">Visit us at our studio or reach out online. We'd love to meet you and discuss your vision.</p>
+
+    <div class="location-wrapper">
+        <div class="location-info">
+            <div class="location-detail">
+                <div class="location-detail-icon">📍</div>
+                <div>
+                    <h4>Address</h4>
+                    <p>12/4 Studio Lane, MG Road<br>Kochi, Kerala — 682016<br>India</p>
+                </div>
+            </div>
+            <div class="location-detail">
+                <div class="location-detail-icon">🕐</div>
+                <div>
+                    <h4>Working Hours</h4>
+                    <p>Monday – Saturday<br>9:00 AM – 7:00 PM IST</p>
+                </div>
+            </div>
+            <div class="location-detail">
+                <div class="location-detail-icon">🚗</div>
+                <div>
+                    <h4>Getting Here</h4>
+                    <p>5 min from Ernakulam Junction.<br>Parking available on premises.</p>
+                </div>
+            </div>
+        </div>
+        <div class="map-placeholder">
+            🗺️
+            <p>Kochi, Kerala, India</p>
+        </div>
+    </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ── CONTACT ── -->
+<section id="contact" style="max-width:1200px;">
+    <div class="section-label">Get In Touch</div>
+    <h2 class="section-title">Let's Create Something<br>Beautiful Together</h2>
+
+    <div class="contact-grid">
+        <div class="contact-cards">
+            <div class="contact-card">
+                <div class="contact-icon">📞</div>
+                <div>
+                    <h4>Phone</h4>
+                    <a href="tel:+919876543210">+91 98765 43210</a>
+                </div>
+            </div>
+            <div class="contact-card">
+                <div class="contact-icon">📧</div>
+                <div>
+                    <h4>Email</h4>
+                    <a href="mailto:hello@vowstudio.in">hello@vowstudio.in</a>
+                </div>
+            </div>
+            <div class="contact-card">
+                <div class="contact-icon">📸</div>
+                <div>
+                    <h4>Instagram</h4>
+                    <a href="#">@vowstudio</a>
+                </div>
+            </div>
+            <div class="contact-card">
+                <div class="contact-icon">💬</div>
+                <div>
+                    <h4>WhatsApp</h4>
+                    <a href="#">Chat with us</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="contact-form">
+            <h3>Send us a message</h3>
+            <div class="form-group">
+                <label>Your Name</label>
+                <input type="text" placeholder="e.g. John Doe">
+            </div>
+            <div class="form-group">
+                <label>Email Address</label>
+                <input type="email" placeholder="you@example.com">
+            </div>
+            <div class="form-group">
+                <label>What's the occasion?</label>
+                <input type="text" placeholder="e.g. Wedding, Event, Portrait...">
+            </div>
+            <div class="form-group">
+                <label>Message</label>
+                <textarea rows="4" placeholder="Tell us about your project..."></textarea>
+            </div>
+            <button class="submit-btn" type="button">Send Message →</button>
+        </div>
+    </div>
+</section>
+
+<!-- ── FOOTER ── -->
+<footer>
+    <div class="logo">VowStudio</div>
+    <p>© 2026 VowStudio. All rights reserved.</p>
+    <a href="/admin/">Admin Panel ↗</a>
+</footer>
+
+<!-- Smooth scroll for nav links -->
+<script>
+    document.querySelectorAll('a[href^="#"]').forEach(a => {
+        a.addEventListener('click', e => {
+            e.preventDefault();
+            const target = document.querySelector(a.getAttribute('href'));
+            if (target) target.scrollIntoView({ behavior: 'smooth' });
+        });
+    });
+
+    // Navbar shadow on scroll
+    window.addEventListener('scroll', () => {
+        const nav = document.querySelector('.navbar');
+        nav.style.background = window.scrollY > 40
+            ? 'rgba(10,10,14,0.95)'
+            : 'rgba(10,10,14,0.7)';
+    });
+</script>
 
 </body>
 </html>
